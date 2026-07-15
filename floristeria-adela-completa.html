@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Floristería Doña ADELA</title>
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #fce4ec 0%, #e8f5e9 100%); min-height: 100vh; padding: 16px; color: #333; }
+   .container { max-width: 800px; margin: 0 auto; }
+    h1 { text-align: center; color: #c2185b; margin-bottom: 24px; font-size: 28px; }
+   .menu { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px; }
+    @media (min-width: 768px) {.menu { grid-template-columns: repeat(6, 1fr); } }
+   .btn-menu { background: #fff; border: 3px solid #e91e63; color: #c2185b; padding: 20px 16px; font-size: 18px; font-weight: bold; border-radius: 12px; cursor: pointer; transition: all 0.3s ease; }
+   .btn-menu:hover { background: #e91e63; color: #fff; transform: translateY(-2px); box-shadow: 0 6px 12px rgba(233,30,99,0.3); }
+   .btn-menu.active { background: #43a047; border-color: #43a047; color: #fff; }
+   .seccion { display: none; background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border-top: 5px solid #e91e63; animation: fadeIn 0.3s ease; }
+   .seccion.activa { display: block; }
+   @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+   .seccion h2 { color: #43a047; margin-bottom: 16px; font-size: 22px; }
+   .form-group { margin-bottom: 14px; }
+    label { display: block; margin-bottom: 6px; color: #c2185b; font-weight: 600; font-size: 14px; }
+    input, select { width: 100%; padding: 12px; border: 2px solid #f8bbd0; border-radius: 8px; font-size: 16px; }
+    input:focus, select:focus { outline: none; border-color: #e91e63; box-shadow: 0 0 0 3px rgba(233,30,99,0.1); }
+   .btn-guardar { width: 100%; background: #43a047; color: #fff; border: none; padding: 14px; font-size: 16px; font-weight: bold; border-radius: 8px; cursor: pointer; margin-top: 8px; transition: all 0.3s ease; }
+   .btn-guardar:hover { background: #388e3c; transform: translateY(-1px); box-shadow: 0 4px 8px rgba(67,160,71,0.3); }
+   .btn-guardar:active { transform: translateY(0); }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 14px; }
+    thead { background: #fce4ec; }
+    th, td { padding: 10px 8px; text-align: left; border-bottom: 1px solid #f8bbd0; }
+    th { color: #c2185b; font-weight: 600; }
+    tbody tr:hover { background: #f1f8e9; }
+   .table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+   .mensaje-construccion { text-align: center; padding: 60px 20px; color: #c2185b; font-size: 24px; font-weight: bold; background: linear-gradient(135deg, #fce4ec 0%, #f1f8e9 100%); border-radius: 12px; margin-top: 20px; }
+   @media (max-width: 480px) { 
+        h1 { font-size: 22px; }
+        .btn-menu { padding: 16px 8px; font-size: 14px; }
+        .seccion { padding: 16px; }
+        table { font-size: 12px; }
+        th, td { padding: 8px 6px; }
+   }
+</style>
+</head>
+<body>
+<div class="container">
+    <h1>🌸 Floristería Doña ADELA 🌸</h1>
+
+    <div class="menu">
+        <button class="btn-menu" onclick="mostrarSeccion('compras', this)">🛒 COMPRAS</button>
+        <button class="btn-menu" onclick="mostrarSeccion('ventas', this)">💐 VENTAS</button>
+        <button class="btn-menu" onclick="mostrarSeccion('bodega', this)">📦 BODEGA</button>
+        <button class="btn-menu" onclick="mostrarSeccion('trabajo', this)">📋 ORDEN DE TRABAJO</button>
+        <button class="btn-menu" onclick="mostrarSeccion('anticipo', this)">💵 ANTICIPO A TRABAJADOR</button>
+        <button class="btn-menu" onclick="mostrarSeccion('pagos', this)">💰 PAGOS DE TRABAJADOR</button>
+    </div>
+
+    <!-- COMPRAS -->
+    <div class="seccion" id="compras">
+        <h2>🛒 Registrar Compra</h2>
+        <form id="formCompras">
+            <div class="form-group"><label>Producto:</label><input type="text" id="compraProducto" required></div>
+            <div class="form-group"><label>Cantidad:</label><input type="number" id="compraCantidad" min="1" required></div>
+            <div class="form-group"><label>Precio:</label><input type="number" id="compraPrecio" min="0" step="0.01" required></div>
+            <button type="submit" class="btn-guardar">GUARDAR</button>
+        </form>
+        <div class="table-responsive"><table id="tablaCompras"><thead><tr><th>Producto</th><th>Cantidad</th><th>Precio</th><th>Total</th></tr></thead><tbody></tbody></table></div>
+    </div>
+
+    <!-- VENTAS -->
+    <div class="seccion" id="ventas">
+        <h2>💐 Registrar Venta</h2>
+        <form id="formVentas">
+            <div class="form-group"><label>Cliente:</label><input type="text" id="ventaCliente" required></div>
+            <div class="form-group"><label>Producto:</label><input type="text" id="ventaProducto" required></div>
+            <div class="form-group"><label>Cantidad:</label><input type="number" id="ventaCantidad" min="1" required></div>
+            <div class="form-group"><label>Precio:</label><input type="number" id="ventaPrecio" min="0" step="0.01" required></div>
+            <button type="submit" class="btn-guardar">GUARDAR</button>
+        </form>
+        <div class="table-responsive"><table id="tablaVentas"><thead><tr><th>Cliente</th><th>Producto</th><th>Cant.</th><th>Precio</th><th>Total</th></tr></thead><tbody></tbody></table></div>
+    </div>
+
+    <!-- BODEGA -->
+    <div class="seccion" id="bodega">
+        <h2>📦 Control de Bodega</h2>
+        <form id="formBodega">
+            <div class="form-group"><label>Tamaño:</label><select id="bodegaTamano" required><option value="">Seleccionar</option><option value="Grande">Grande</option><option value="Pequeña">Pequeña</option></select></div>
+            <div class="form-group"><label>Tipo:</label><select id="bodegaTipo" required><option value="">Seleccionar</option><option value="Entrada">Entrada</option><option value="Salida">Salida</option></select></div>
+            <div class="form-group"><label>Cantidad:</label><input type="number" id="bodegaCantidad" min="1" required></div>
+            <button type="submit" class="btn-guardar">GUARDAR</button>
+        </form>
+        <h2 style="margin-top: 24px;">Stock Actual</h2>
+        <div id="stockActual"></div>
+        <div class="table-responsive"><table id="tablaBodega"><thead><tr><th>Tamaño</th><th>Tipo</th><th>Cantidad</th><th>Fecha</th></tr></thead><tbody></tbody></table></div>
+    </div>
+
+    <!-- ORDEN DE TRABAJO -->
+    <div class="seccion" id="trabajo">
+        <h2>📋 Orden de Trabajo</h2>
+        <form id="formTrabajo">
+            <div class="form-group"><label>Trabajador:</label><input type="text" id="trabajoNombre" required></div>
+            <div class="form-group"><label>Tipo:</label><select id="trabajoTipo" required><option value="">Seleccionar</option><option value="Hecha de flor">Hecha de flor</option></select></div>
+            <div class="form-group"><label>Bolsas:</label><input type="number" id="florBolsas" min="1" value="1"></div>
+            <div class="form-group"><label>Tamaño:</label><select id="florTamano"><option value="Grande">Grande</option><option value="Pequeña">Pequeña</option></select></div>
+            <button type="submit" class="btn-guardar">GUARDAR</button>
+        </form>
+        <div class="table-responsive"><table id="tablaTrabajo"><thead><tr><th>Trabajador</th><th>Tipo</th><th>Total</th><th>Estado</th><th>Fecha</th></tr></thead><tbody></tbody></table></div>
+    </div>
+
+    <!-- ANTICIPO - YA FUNCIONANDO -->
+    <div class="seccion" id="anticipo">
+        <h2>💵 Anticipo a Trabajador</h2>
+        <form id="formAnticipo">
+            <div class="form-group"><label>Trabajador:</label><input type="text" id="anticipoTrabajador" required></div>
+            <div class="form-group"><label>Cantidad:</label><input type="number" id="anticipoCantidad" min="0.01" step="0.01" required></div>
+            <div class="form-group"><label>Motivo:</label><input type="text" id="anticipoMotivo" placeholder="Opcional"></div>
+            <button type="button" class="btn-guardar" onclick="guardarAnticipo()">GUARDAR ANTICIPO</button>
+        </form>
+        <div class="table-responsive"><table id="tablaAnticipos"><thead><tr><th>Trabajador</th><th>Anticipo</th><th>Motivo</th><th>Fecha</th><th>Total Acumulado</th></tr></thead><tbody></tbody></table></div>
+    </div>
+
+    <!-- PAGOS -->
+    <div class="seccion" id="pagos">
+        <h2>💰 Pagos de Trabajador</h2>
+        <div class="form-group"><input type="text" id="nombrePago" placeholder="Nombre del Trabajador" required></div>
+        <button class="btn-guardar" onclick="buscarPago()">BUSCAR</button>
+        <div id="resultadoPago" style="background: #f1f8e9; padding: 16px; border-radius: 8px; margin: 16px 0; display: none;">
+            <p>Total por Ordenes: <span id="totalOrdenesPago">Q0.00</span></p>
+            <p>Total Anticipos: <span id="totalAnticiposPago">Q0.00</span></p>
+            <p><strong>TOTAL A PAGAR: <span id="totalPagarPago">Q0.00</span></strong></p>
+        </div>
+        <button class="btn-guardar" onclick="liquidarPago()" style="background:#ff9800;">LIQUIDAR</button>
+        <div class="table-responsive"><table><thead><tr><th>Trabajador</th><th>Total Ordenes</th><th>Anticipos</th><th>Pagado</th><th>Fecha</th></tr></thead><tbody id="tablaPagos"></tbody></table></div>
+    </div>
+</div>
+
+<script>
+    // Variables globales
+    let compras = JSON.parse(localStorage.getItem('compras') || '[]');
+    let ventas = JSON.parse(localStorage.getItem('ventas') || '[]');
+    let bodega = JSON.parse(localStorage.getItem('bodega') || '[]');
+    let trabajo = JSON.parse(localStorage.getItem('trabajo') || '[]');
+    let anticipos = JSON.parse(localStorage.getItem('anticipos') || '[]');
+    let pagos = JSON.parse(localStorage.getItem('pagos') || '[]');
+    let stock = JSON.parse(localStorage.getItem('stock') || '{"Grande":0,"Pequeña":0}');
+
+    // Navegación
+    function mostrarSeccion(id, btn) {
+        document.querySelectorAll('.seccion').forEach(s => s.classList.remove('activa'));
+        document.querySelectorAll('.btn-menu').forEach(b => b.classList.remove('active'));
+        document.getElementById(id).classList.add('activa');
+        if (btn) btn.classList.add('active');
+    }
+
+    // COMPRAS
+    document.getElementById('formCompras').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const producto = document.getElementById('compraProducto').value;
+        const cantidad = parseInt(document.getElementById('compraCantidad').value);
+        const precio = parseFloat(document.getElementById('compraPrecio').value);
+        compras.push({producto, cantidad, precio, total: cantidad * precio});
+        localStorage.setItem('compras', JSON.stringify(compras));
+        actualizarTablaCompras();
+        this.reset();
+        alert('✅ Guardado');
+    });
+
+    function actualizarTablaCompras() {
+        const tbody = document.querySelector('#tablaCompras tbody');
+        tbody.innerHTML = '';
+        compras.forEach(item => {
+            const fila = tbody.insertRow();
+            fila.insertCell(0).textContent = item.producto;
+            fila.insertCell(1).textContent = item.cantidad;
+            fila.insertCell(2).textContent = 'Q' + item.precio.toFixed(2);
+            fila.insertCell(3).textContent = 'Q' + item.total.toFixed(2);
+        });
+    }
+
+    // VENTAS
+    document.getElementById('formVentas').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const cliente = document.getElementById('ventaCliente').value;
+        const producto = document.getElementById('ventaProducto').value;
+        const cantidad = parseInt(document.getElementById('ventaCantidad').value);
+        const precio = parseFloat(document.getElementById('ventaPrecio').value);
+        ventas.push({cliente, producto, cantidad, precio, total: cantidad * precio});
+        localStorage.setItem('ventas', JSON.stringify(ventas));
+        actualizarTablaVentas();
+        this.reset();
+        alert('✅ Guardado');
+    });
+
+    function actualizarTablaVentas() {
+        const tbody = document.querySelector('#tablaVentas tbody');
+        tbody.innerHTML = '';
+        ventas.forEach(item => {
+            const fila = tbody.insertRow();
+            fila.insertCell(0).textContent = item.cliente;
+            fila.insertCell(1).textContent = item.producto;
+            fila.insertCell(2).textContent = item.cantidad;
+            fila.insertCell(3).textContent = 'Q' + item.precio.toFixed(2);
+            fila.insertCell(4).textContent = 'Q' + item.total.toFixed(2);
+        });
+    }
+
+    // BODEGA
+    document.getElementById('formBodega').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const tamano = document.getElementById('bodegaTamano').value;
+        const tipo = document.getElementById('bodegaTipo').value;
+        const cantidad = parseInt(document.getElementById('bodegaCantidad').value);
+        const fecha = new Date().toLocaleDateString('es-MX');
+        if (tipo === 'Entrada') stock[tamano] += cantidad;
+        else { stock[tamano] -= cantidad; if (stock[tamano] < 0) stock[tamano] = 0; }
+        bodega.push({tamano, tipo, cantidad, fecha});
+        localStorage.setItem('bodega', JSON.stringify(bodega));
+        localStorage.setItem('stock', JSON.stringify(stock));
+        actualizarTablaBodega();
+        actualizarStock();
+        this.reset();
+        alert('✅ Guardado');
+    });
+
+    function actualizarTablaBodega() {
+        const tbody = document.querySelector('#tablaBodega tbody');
+        tbody.innerHTML = '';
+        bodega.forEach(item => {
+            const fila = tbody.insertRow();
+            fila.insertCell(0).textContent = item.tamano;
+            fila.insertCell(1).textContent = item.tipo;
+            fila.insertCell(2).textContent = item.cantidad;
+            fila.insertCell(3).textContent = item.fecha;
+        });
+    }
+
+    function actualizarStock() {
+        document.getElementById('stockActual').innerHTML = `
+            <div style="background:linear-gradient(135deg,#f1f8e9 0%,#fce4ec 100%);padding:16px;border-radius:8px;margin-bottom:12px;border-left:4px solid #43a047;">
+                <div style="font-size:18px;font-weight:bold;color:#c2185b;margin-bottom:4px;">🌹 Arreglos Grandes</div>
+                <div style="font-size:24px;font-weight:bold;color:#43a047;">${stock.Grande} unidades</div>
+            </div>
+            <div style="background:linear-gradient(135deg,#f1f8e9 0%,#fce4ec 100%);padding:16px;border-radius:8px;border-left:4px solid #43a047;">
+                <div style="font-size:18px;font-weight:bold;color:#c2185b;margin-bottom:4px;">🌷 Arreglos Pequeños</div>
+                <div style="font-size:24px;font-weight:bold;color:#43a047;">${stock.Pequeña} unidades</div>
+            </div>`;
+    }
+
+    // ORDEN DE TRABAJO
+    document.getElementById('formTrabajo').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const trabajador = document.getElementById('trabajoNombre').value;
+        const tipo = document.getElementById('trabajoTipo').value;
+        const bolsas = parseInt(document.getElementById('florBolsas').value) || 1;
+        const tamano = document.getElementById('florTamano').value;
+        const precioUnitario = tamano === 'Grande'? 25 : 40;
+        const total = bolsas * precioUnitario;
+        trabajo.push({trabajador, tipo, total, estado: 'En Proceso', fecha: new Date().toLocaleDateString('es-MX')});
+        localStorage.setItem('trabajo', JSON.stringify(trabajo));
+        actualizarTablaTrabajo();
+        this.reset();
+        alert('✅ Guardado');
+    });
+
+    function actualizarTablaTrabajo() {
+        const tbody = document.querySelector('#tablaTrabajo tbody');
+        tbody.innerHTML = '';
+        trabajo.forEach(item => {
+            const fila = tbody.insertRow();
+            fila.insertCell(0).textContent = item.trabajador;
+            fila.insertCell(1).textContent = item.tipo;
+            fila.insertCell(2).innerHTML = `<strong style="color:#43a047;">Q${item.total.toFixed(2)}</strong>`;
+            fila.insertCell(3).textContent = item.estado;
+            fila.insertCell(4).textContent = item.fecha;
+        });
+    }
+
+    // ANTICIPO - FUNCIONANDO 100%
+    function guardarAnticipo() {
+        const trabajador = document.getElementById('anticipoTrabajador').value.trim();
+        const cantidad = parseFloat(document.getElementById('anticipoCantidad').value);
+        const motivo = document.getElementById('anticipoMotivo').value.trim();
+
+        if (!trabajador || !cantidad || cantidad <= 0) {
+            alert('⚠ Complete los campos correctamente');
+            return;
+        }
+
+        anticipos.push({
+            trabajador: trabajador,
+            cantidad: cantidad,
+            motivo: motivo || 'Anticipo',
+            fecha: new Date().toLocaleDateString('es-MX')
+        });
+
+        localStorage.setItem('anticipos', JSON.stringify(anticipos));
+        document.getElementById('formAnticipo').reset();
+        mostrarAnticipos();
+        alert('✅ Anticipo guardado');
+    }
+
+    function mostrarAnticipos() {
+        const tbody = document.querySelector('#tablaAnticipos tbody');
+        tbody.innerHTML = '';
+        const totales = {};
+        anticipos.forEach(a => {
+            totales[a.trabajador] = (totales[a.trabajador] || 0) + a.cantidad;
+        });
+        anticipos.forEach(item => {
+            const fila = tbody.insertRow();
+            fila.insertCell(0).textContent = item.trabajador;
+            fila.insertCell(1).innerHTML = `<strong style="color: #e91e63;">Q${item.cantidad.toFixed(2)}</strong>`;
+            fila.insertCell(2).textContent = item.motivo;
+            fila.insertCell(3).textContent = item.fecha;
+            fila.insertCell(4).innerHTML = `<strong>Q${totales[item.trabajador].toFixed(2)}</strong>`;
+        });
+    }
+
+    // PAGOS
+    function buscarPago() {
+        const nombre = document.getElementById('nombrePago').value.trim();
+        if (!nombre) { alert('⚠ Ingrese el nombre del trabajador'); return; }
+        const totalOrdenes = trabajo.filter(o => o.trabajador.toLowerCase() === nombre.toLowerCase()).reduce((sum, o) => sum + o.total, 0);
+        const totalAnticipos = anticipos.filter(a => a.trabajador.toLowerCase() === nombre.toLowerCase()).reduce((sum, a) => sum + a.cantidad, 0);
+        const aPagar = totalOrdenes - totalAnticipos;
+        document.getElementById('totalOrdenesPago').textContent = 'Q' + totalOrdenes.toFixed(2);
+        document.getElementById('totalAnticiposPago').textContent = 'Q' + totalAnticipos.toFixed(2);
+        document.getElementById('totalPagarPago').textContent = 'Q' + aPagar.toFixed(2);
+        document.getElementById('resultadoPago').style.display = 'block';
+    }
+
+    function liquidarPago() {
+        const nombre = document.getElementById('nombrePago').value.trim();
+        if (!nombre) { alert('⚠ Primero busque un trabajador'); return; }
+        const ordenesPend = trabajo.filter(o => o.trabajador.toLowerCase() === nombre.toLowerCase());
+        if (ordenesPend.length === 0) { alert('⚠ No hay órdenes pendientes'); return; }
+        const totalOrdenes = ordenesPend.reduce((sum, o) => sum + o.total, 0);
+        const totalAnticipos = anticipos.filter(a => a.trabajador.toLowerCase() === nombre.toLowerCase()).reduce((sum, a) => sum + a.cantidad, 0);
+        const totalPagado = totalOrdenes - totalAnticipos;
+        pagos.push({trabajador: nombre, totalOrdenes, totalAnticipos, totalPagado, fecha: new Date().toLocaleDateString('es-MX')});
+        localStorage.setItem('pagos', JSON.stringify(pagos));
+        trabajo = trabajo.filter(o => o.trabajador.toLowerCase() !== nombre.toLowerCase());
+        anticipos = anticipos.filter(a => a.trabajador.toLowerCase() !== nombre.toLowerCase());
+        localStorage.setItem('trabajo', JSON.stringify(trabajo));
+        localStorage.setItem('anticipos', JSON.stringify(anticipos));
+        actualizarTablaTrabajo();
+        mostrarAnticipos();
+        mostrarPagos();
+        document.getElementById('nombrePago').value = '';
+        document.getElementById('resultadoPago').style.display = 'none';
+        alert(`✅ Liquidación completada para ${nombre}. Total pagado: Q${totalPagado.toFixed(2)}`);
+    }
+
+    function mostrarPagos() {
+        const tbody = document.getElementById('tablaPagos');
+        tbody.innerHTML = '';
+        pagos.forEach(item => {
+            const fila = tbody.insertRow();
+            fila.insertCell(0).textContent = item.trabajador;
+            fila.insertCell(1).textContent = 'Q' + item.totalOrdenes.toFixed(2);
+            fila.insertCell(2).textContent = 'Q' + item.totalAnticipos.toFixed(2);
+            fila.insertCell(3).innerHTML = `<strong style="color: #43a047;">Q${item.totalPagado.toFixed(2)}</strong>`;
+            fila.insertCell(4).textContent = item.fecha;
+        });
+    }
+
+    // Cargar datos al iniciar
+    actualizarTablaCompras();
+    actualizarTablaVentas();
+    actualizarTablaBodega();
+    actualizarStock();
+    actualizarTablaTrabajo();
+    mostrarAnticipos();
+    mostrarPagos();
+    mostrarSeccion('compras', document.querySelector('.btn-menu'));
+</script>
+<script>(function(){document.addEventListener("click",function(e){var a=e.target.closest("[data-product-id]");if(!a)return;e.preventDefault();var pid=a.getAttribute("data-product-id");if(pid)parent.postMessage({type:"ecto-artifact-link-click",productId:pid},"*")})})();</script>
+</body>
+</html>
